@@ -63,7 +63,14 @@ const DataPage = () => {
 
   return (
     <div className={tableStyles.tableContainer}>
-      <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
+      <div className={tableStyles.header}>
+        <img
+          src="https://i.postimg.cc/527RmSwt/logo.png"
+          alt="ELRoyal Logo"
+          className={tableStyles.logo}
+        />
+        <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
+      </div>
       <input
         type="text"
         placeholder="Search"
