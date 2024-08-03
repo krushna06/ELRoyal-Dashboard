@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import tableStyles from '../styles/Table.module.css';
+import loaderStyles from '../styles/Loader.module.css';
 
 const DataPage = () => {
   const [data, setData] = useState([]);
@@ -55,8 +56,7 @@ const DataPage = () => {
 
   if (!data.length) {
     return (
-      <div className={tableStyles.loader}>
-        <div className={tableStyles.spinner}></div>
+      <div className={loaderStyles.loader}>
       </div>
     );
   }
