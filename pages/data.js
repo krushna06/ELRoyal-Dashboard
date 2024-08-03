@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import tableStyles from '../styles/Table.module.css';
 
 const DataPage = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,6 +16,7 @@ const DataPage = () => {
         const response = await axios.get('https://3000-krushna06-elroyalbot-t1jtrc0y4s9.ws-us115.gitpod.io/api/v1/data');
         console.log('Data fetched:', response.data);
         setData(response.data);
+        setFilteredData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
@@ -22,23 +26,56 @@ const DataPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const searchLower = searchTerm.toLowerCase();
+    const result = data.filter(user =>
+      user.id.toLowerCase().includes(searchLower) ||
+      user.stakeId.toLowerCase().includes(searchLower) ||
+      user.kickUsername.toLowerCase().includes(searchLower)
+    );
+    setFilteredData(result);
+  }, [searchTerm, data]);
+
+  useEffect(() => {
+    const sortedData = [...filteredData].sort((a, b) => {
+      return sortOrder === 'asc'
+        ? a.age - b.age
+        : b.age - a.age;
+    });
+    setFilteredData(sortedData);
+  }, [sortOrder]);
+
+  const handleSort = () => {
+    setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  if (!data) {
+  if (!data.length) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      <h1>Data Page</h1>
+      <br></br>
+      <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
       <div className={tableStyles.tableContainer}>
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className={tableStyles.searchInput}
+        />
         <table className={tableStyles.table}>
           <thead>
             <tr>
               <th className={tableStyles.th}>ID</th>
-              <th className={tableStyles.th}>Age</th>
+              <th className={tableStyles.th}>Age <button onClick={handleSort} className={tableStyles.sortButton}>
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </button></th>
               <th className={tableStyles.th}>Country</th>
               <th className={tableStyles.th}>Stake ID</th>
               <th className={tableStyles.th}>Kick Username</th>
@@ -47,7 +84,7 @@ const DataPage = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((user, index) => (
+            {filteredData.map((user, index) => (
               <tr
                 key={user.id}
                 className={index % 2 === 0 ? tableStyles.trEven : ''}
@@ -55,8 +92,26 @@ const DataPage = () => {
                 <td className={tableStyles.td}>{user.id}</td>
                 <td className={tableStyles.td}>{user.age}</td>
                 <td className={tableStyles.td}>{user.country}</td>
-                <td className={tableStyles.td}>{user.stakeId}</td>
-                <td className={tableStyles.td}>{user.kickUsername}</td>
+                <td className={tableStyles.td}>
+                  <a
+                    href={`https://stake.com/casino/games/crash?name=${encodeURIComponent(user.stakeId)}&modal=user`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={tableStyles.stakeLink}
+                  >
+                    {user.stakeId}
+                  </a>
+                </td>
+                <td className={tableStyles.td}>
+                  <a
+                    href={`https://kick.com/${user.kickUsername}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={tableStyles.kickLink}
+                  >
+                    {user.kickUsername}
+                  </a>
+                </td>
                 <td className={tableStyles.td}>{user.reason}</td>
                 <td className={tableStyles.td}>{new Date(user.dateTime).toLocaleString()}</td>
               </tr>

@@ -1,36 +1,97 @@
 .tableContainer {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #444;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    background-color: #333;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #444;
-  }
-  
-  .th, .td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #555;
-    color: #ddd; 
-  }
-  
-  .th {
-    background-color: #555;
-    color: #fff; 
-    font-weight: bold;
-  }
-  
-  .trEven {
-    background-color: #333;
-  }
-  
-  .trHover:hover {
-    background-color: #666;
-  }
-  
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  background-color: #333;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #444;
+  color: #ddd;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.searchInput:focus {
+  border-color: #888;
+  background-color: #555;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #888;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #444;
+}
+
+.th, .td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #555;
+  color: #ddd;
+}
+
+.th {
+  background-color: #555;
+  color: #fff;
+  font-weight: bold;
+  position: relative;
+}
+
+.trEven {
+  background-color: #333;
+}
+
+.trHover:hover {
+  background-color: #666;
+}
+
+.pageTitle {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ddd;
+}
+
+.kickLink {
+  color: #00bcd4;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.kickLink:hover {
+  color: #4dd0e1;
+}
+
+.stakeLink {
+  color: #ff9800;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.stakeLink:hover {
+  color: #ffc107;
+}
+
+.sortButton {
+  background: none;
+  border: none;
+  color: #ddd;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.3s;
+}
+
+.sortButton:hover {
+  color: #fff;
+}
