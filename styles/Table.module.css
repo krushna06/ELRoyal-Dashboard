@@ -1,0 +1,36 @@
+.tableContainer {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    background-color: #333;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #444;
+  }
+  
+  .th, .td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #555;
+    color: #ddd; 
+  }
+  
+  .th {
+    background-color: #555;
+    color: #fff; 
+    font-weight: bold;
+  }
+  
+  .trEven {
+    background-color: #333;
+  }
+  
+  .trHover:hover {
+    background-color: #666;
+  }
+  
