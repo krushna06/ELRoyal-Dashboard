@@ -1,8 +1,10 @@
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { getSession } from 'next-auth/react';
 import tableStyles from '../styles/Table.module.css';
+import loaderStyles from '../styles/Loader.module.css';
 
-const DataPage = () => {
+const DataPage = ({ session }) => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [error, setError] = useState(null);
@@ -54,7 +56,11 @@ const DataPage = () => {
   }
 
   if (!data.length) {
-    return <div>Loading...</div>;
+    return (
+      <div className={loaderStyles.loader}>
+        {/* Loader spinner */}
+      </div>
+    );
   }
 
   return (
@@ -122,5 +128,25 @@ const DataPage = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  // Redirect to login page if not authenticated
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
 
 export default DataPage;
