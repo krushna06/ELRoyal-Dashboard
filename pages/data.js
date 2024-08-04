@@ -1,9 +1,10 @@
+import { getSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
 
-const DataPage = () => {
+const DataPage = ({ session }) => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [error, setError] = useState(null);
@@ -132,5 +133,24 @@ const DataPage = () => {
     </div>
   );
 };
+
+// Server-side function to check for user authentication
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    // Redirect to the sign-in page if not authenticated
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default DataPage;
