@@ -79,59 +79,61 @@ const DataPage = ({ session }) => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className={tableStyles.searchInput}
       />
-      <table className={tableStyles.table}>
-        <thead>
-          <tr>
-            <th className={tableStyles.th}>ID</th>
-            <th className={tableStyles.th}>Age
-              <button onClick={handleSort} className={tableStyles.sortButton}>
-                {sortOrder === 'asc' ? '↑' : '↓'}
-              </button>
-            </th>
-            <th className={tableStyles.th}>Country</th>
-            <th className={tableStyles.th}>Stake ID</th>
-            <th className={tableStyles.th}>Kick Username</th>
-            <th className={tableStyles.th}>Reason</th>
-            <th className={tableStyles.th}>Date Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((user, index) => (
-            <tr
-              key={user.id}
-              className={index % 2 === 0 ? tableStyles.trEven : ''}
-            >
-              <td className={tableStyles.td}>{user.id}</td>
-              <td className={tableStyles.td}>{user.age}</td>
-              <td className={tableStyles.td}>{user.country}</td>
-              <td className={tableStyles.td}>
-                <a
-                  href={`https://stake.com/casino/games/crash?name=${encodeURIComponent(user.stakeId)}&modal=user`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={tableStyles.stakeLink}
-                >
-                  {user.stakeId}
-                </a>
-              </td>
-              <td className={tableStyles.td}>
-                <a
-                  href={`https://kick.com/${user.kickUsername}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={tableStyles.kickLink}
-                >
-                  {user.kickUsername}
-                </a>
-              </td>
-              <td className={tableStyles.td}>{user.reason}</td>
-              <td className={tableStyles.td}>{new Date(user.dateTime).toLocaleString()}</td>
+      <div className={tableStyles.tableWrapper}>
+        <table className={tableStyles.table}>
+          <thead>
+            <tr>
+              <th className={tableStyles.th}>ID</th>
+              <th className={tableStyles.th}>Age
+                <button onClick={handleSort} className={tableStyles.sortButton}>
+                  {sortOrder === 'asc' ? '↑' : '↓'}
+                </button>
+              </th>
+              <th className={tableStyles.th}>Country</th>
+              <th className={tableStyles.th}>Stake ID</th>
+              <th className={tableStyles.th}>Kick Username</th>
+              <th className={tableStyles.th}>Reason</th>
+              <th className={tableStyles.th}>Date Time</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredData.map((user, index) => (
+              <tr
+                key={user.id}
+                className={index % 2 === 0 ? tableStyles.trEven : ''}
+              >
+                <td className={tableStyles.td}>{user.id}</td>
+                <td className={tableStyles.td}>{user.age}</td>
+                <td className={tableStyles.td}>{user.country}</td>
+                <td className={tableStyles.td}>
+                  <a
+                    href={`https://stake.com/casino/games/crash?name=${encodeURIComponent(user.stakeId)}&modal=user`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={tableStyles.stakeLink}
+                  >
+                    {user.stakeId}
+                  </a>
+                </td>
+                <td className={tableStyles.td}>
+                  <a
+                    href={`https://kick.com/${user.kickUsername}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={tableStyles.kickLink}
+                  >
+                    {user.kickUsername}
+                  </a>
+                </td>
+                <td className={tableStyles.td}>{user.reason}</td>
+                <td className={tableStyles.td}>{new Date(user.dateTime).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-  );
+  );  
 };
 
 // Server-side function to check for user authentication
