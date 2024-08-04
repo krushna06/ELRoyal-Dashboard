@@ -1,5 +1,6 @@
 import { getSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import axios from 'axios';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
@@ -84,14 +85,16 @@ const DataPage = ({ session }) => {
 
   return (
     <div className={tableStyles.tableContainer}>
-      <div className={tableStyles.header}>
-        <img
-          src="https://i.postimg.cc/527RmSwt/logo.png"
+    <div className={tableStyles.header}>
+    <Image
+          src="/logo.png"
           alt="ELRoyal Logo"
           className={tableStyles.logo}
+          width={100}
+          height={100}
         />
-        <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
-      </div>
+      <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
+    </div>
       <input
         type="text"
         placeholder="Search"
