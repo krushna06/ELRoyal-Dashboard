@@ -3,39 +3,44 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
-import Modal from '../components/Modal';
-import modalStyles from '../styles/Modal.module.css';
 
 const DataPage = ({ session }) => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [winsData, setWinsData] = useState({});
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [winsData, setWinsData] = useState({});
+  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching user data...');
-        const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`);
-        console.log('User data fetched:', userResponse.data);
-        setData(userResponse.data);
-        setFilteredData(userResponse.data);
-
-        console.log('Fetching wins data...');
-        const winsResponse = await axios.get(`https://3000-krushna06-elroyalgiveaw-i3oopq4x753.ws-us115.gitpod.io/api/v1/winners`);
-        console.log('Wins data fetched:', winsResponse.data);
-        setWinsData(winsResponse.data);
+        console.log('Fetching data...');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`);
+        console.log('Data fetched:', response.data);
+        setData(response.data);
+        setFilteredData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
       }
     };
 
+    const fetchWins = async () => {
+      try {
+        console.log('Fetching wins data...');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_GIVEAWAY_API_URL}`);
+        console.log('Wins data fetched:', response.data);
+        setWinsData(response.data);
+      } catch (error) {
+        console.error('Error fetching wins data:', error);
+        setError(error.message);
+      }
+    };
+
     fetchData();
+    fetchWins();
   }, []);
 
   useEffect(() => {
@@ -61,14 +66,8 @@ const DataPage = ({ session }) => {
     setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  const openModal = (user) => {
-    setSelectedUser(user);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedUser(null);
+  const handleIconClick = (id) => {
+    setSelectedId(id);
   };
 
   if (error) {
@@ -77,8 +76,7 @@ const DataPage = ({ session }) => {
 
   if (!data.length) {
     return (
-      <div className={loaderStyles.loader}>
-      </div>
+      <div className={loaderStyles.loader}></div>
     );
   }
 
@@ -114,16 +112,21 @@ const DataPage = ({ session }) => {
               <th className={tableStyles.th}>Kick Username</th>
               <th className={tableStyles.th}>Reason</th>
               <th className={tableStyles.th}>Date Time</th>
-              <th className={tableStyles.th}>Details</th>
+              <th className={tableStyles.th}>Wins</th> {/* Added Wins column */}
             </tr>
           </thead>
           <tbody>
             {filteredData.map((user, index) => (
               <tr
                 key={user.id}
-                className={index % 2 === 0 ? tableStyles.trEven : tableStyles.trHover}
+                className={`${index % 2 === 0 ? tableStyles.trEven : tableStyles.trHover}`}
               >
-                <td className={tableStyles.td}>{user.id}</td>
+                <td className={tableStyles.td}>
+                  {user.id}
+                  <button className={tableStyles.iconButton} onClick={() => handleIconClick(user.id)}>
+                    <i className="fa-solid fa-circle-info"></i>
+                  </button>
+                </td>
                 <td className={tableStyles.td}>{user.age}</td>
                 <td className={tableStyles.td}>{user.country}</td>
                 <td className={tableStyles.td}>
@@ -149,40 +152,41 @@ const DataPage = ({ session }) => {
                 <td className={tableStyles.td}>{user.reason}</td>
                 <td className={tableStyles.td}>{new Date(user.dateTime).toLocaleString()}</td>
                 <td className={tableStyles.td}>
-                  <button className={tableStyles.iconButton} onClick={() => openModal(user)}>
-                    <i className="fa-solid fa-circle-info"></i>
-                  </button>
+                  {winsData[user.id] ? `${winsData[user.id].totalWins} wins` : 'No data'}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      <Modal show={isModalOpen} onClose={closeModal} title="User Wins">
-        {selectedUser && (
-          <>
-            <p>ID: {selectedUser.id}</p>
-            <p>Total Wins: {winsData[selectedUser.id] ? winsData[selectedUser.id].totalWins : 0}</p>
-            <h3>Giveaways:</h3>
-            <ul className={modalStyles.giveawayList}>
-              {winsData[selectedUser.id]?.giveaways.map((giveaway, index) => (
-                <li key={index} className={modalStyles.giveawayItem}>
-                  {giveaway.giveawayName} - {new Date(giveaway.date).toLocaleString()}
-                </li>
-              )) || <li>No giveaways</li>}
-            </ul>
-          </>
-        )}
-      </Modal>
+      {selectedId && (
+        <div className={tableStyles.modalOverlay} onClick={() => setSelectedId(null)}>
+          <div className={tableStyles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h2>Wins for ID: {selectedId}</h2>
+            {winsData[selectedId] ? (
+              <ul>
+                {winsData[selectedId].giveaways.map((giveaway, index) => (
+                  <li key={index}>
+                    <strong>{giveaway.giveawayName}</strong> - {new Date(giveaway.date).toLocaleString()}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No data available</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
-  );
+  );  
 };
 
+// Server-side function to check for user authentication
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
   if (!session) {
+    // Redirect to the sign-in page if not authenticated
     return {
       redirect: {
         destination: '/auth/signin',
