@@ -26,7 +26,7 @@ const DataPage = ({ session }) => {
         setFilteredData(userResponse.data);
 
         console.log('Fetching wins data...');
-        const winsResponse = await axios.get(`https://api.el-royal.shop/api/v1/winners`);
+        const winsResponse = await axios.get(`http://api.el-royal.shop:3001/api/v1/winners`);
         console.log('Wins data fetched:', winsResponse.data);
         setWinsData(winsResponse.data);
       } catch (error) {
