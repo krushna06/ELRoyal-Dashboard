@@ -170,7 +170,7 @@ const DataPage = ({ session }) => {
                 <li key={index} className={modalStyles.giveawayItem}>
                   {giveaway.giveawayName} - {new Date(giveaway.date).toLocaleString()}
                 </li>
-              )) || <li>No giveaways</li>}
+              )) || <li>No giveaways won.</li>}
             </ul>
           </>
         )}
