@@ -3,22 +3,32 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
+import Modal from '../components/Modal';
+import modalStyles from '../styles/Modal.module.css';
 
 const DataPage = ({ session }) => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [winsData, setWinsData] = useState({});
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching data...');
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`);
-        console.log('Data fetched:', response.data);
-        setData(response.data);
-        setFilteredData(response.data);
+        console.log('Fetching user data...');
+        const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`);
+        console.log('User data fetched:', userResponse.data);
+        setData(userResponse.data);
+        setFilteredData(userResponse.data);
+
+        console.log('Fetching wins data...');
+        const winsResponse = await axios.get(`https://3000-krushna06-elroyalgiveaw-i3oopq4x753.ws-us115.gitpod.io/api/v1/winners`);
+        console.log('Wins data fetched:', winsResponse.data);
+        setWinsData(winsResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
@@ -49,6 +59,16 @@ const DataPage = ({ session }) => {
 
   const handleSort = () => {
     setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
+  };
+
+  const openModal = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
   };
 
   if (error) {
@@ -94,13 +114,14 @@ const DataPage = ({ session }) => {
               <th className={tableStyles.th}>Kick Username</th>
               <th className={tableStyles.th}>Reason</th>
               <th className={tableStyles.th}>Date Time</th>
+              <th className={tableStyles.th}>Details</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.map((user, index) => (
               <tr
                 key={user.id}
-                className={index % 2 === 0 ? tableStyles.trEven : ''}
+                className={index % 2 === 0 ? tableStyles.trEven : tableStyles.trHover}
               >
                 <td className={tableStyles.td}>{user.id}</td>
                 <td className={tableStyles.td}>{user.age}</td>
@@ -127,21 +148,41 @@ const DataPage = ({ session }) => {
                 </td>
                 <td className={tableStyles.td}>{user.reason}</td>
                 <td className={tableStyles.td}>{new Date(user.dateTime).toLocaleString()}</td>
+                <td className={tableStyles.td}>
+                  <button className={tableStyles.iconButton} onClick={() => openModal(user)}>
+                    <i className="fa-solid fa-circle-info"></i>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <Modal show={isModalOpen} onClose={closeModal} title="User Wins">
+        {selectedUser && (
+          <>
+            <p>ID: {selectedUser.id}</p>
+            <p>Total Wins: {winsData[selectedUser.id] ? winsData[selectedUser.id].totalWins : 0}</p>
+            <h3>Giveaways:</h3>
+            <ul className={modalStyles.giveawayList}>
+              {winsData[selectedUser.id]?.giveaways.map((giveaway, index) => (
+                <li key={index} className={modalStyles.giveawayItem}>
+                  {giveaway.giveawayName} - {new Date(giveaway.date).toLocaleString()}
+                </li>
+              )) || <li>No giveaways</li>}
+            </ul>
+          </>
+        )}
+      </Modal>
     </div>
-  );  
+  );
 };
 
-// Server-side function to check for user authentication
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
   if (!session) {
-    // Redirect to the sign-in page if not authenticated
     return {
       redirect: {
         destination: '/auth/signin',
