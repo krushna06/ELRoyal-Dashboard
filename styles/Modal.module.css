@@ -24,6 +24,7 @@
   overflow-y: auto;
   max-height: 90vh;
   margin: 0 auto;
+  animation: popUp 0.3s ease-out forwards;
 }
 
 .title {
@@ -79,6 +80,32 @@
 
 .iconButton:hover {
   color: #fff;
+}
+
+@keyframes popUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popDown {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.modalClosing {
+  animation: popDown 0.3s ease-out forwards;
 }
 
 @media (max-width: 200px) {
