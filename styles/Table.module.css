@@ -54,12 +54,14 @@
   white-space: nowrap;
 }
 
-.trEven {
+.trEven, .trHover {
   background-color: #333;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .trHover:hover {
   background-color: #666;
+  transition: background-color 0.3s;
 }
 
 .pageTitle {
@@ -96,13 +98,18 @@
   cursor: pointer;
   padding: 2px 6px;
   margin-left: 8px;
-  transition: color 0.3s;
+  transition: color 0.3s, transform 0.2s;
   display: inline-block;
   vertical-align: middle;
 }
 
 .sortButton:hover {
   color: #fff;
+}
+
+.sortButton:active {
+  color: #aaa;
+  transform: scale(0.95);
 }
 
 .header {
@@ -137,6 +144,17 @@
   display: block;
   margin: 0;
   padding: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
