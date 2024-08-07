@@ -1,6 +1,9 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+const usersJson = process.env.NEXTAUTH_USERS_JSON;
+const users = usersJson ? JSON.parse(usersJson) : [];
+
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -12,10 +15,12 @@ export default NextAuth({
       authorize: async (credentials) => {
         const { email, password } = credentials;
 
-        // Validate the provided credentials against environment variables
-        if (email === process.env.AUTH_EMAIL && password === process.env.AUTH_PASSWORD) {
+        // Find user by email
+        const user = users.find(user => user.email === email && user.password === password);
+
+        if (user) {
           // Return a user object if authentication is successful
-          return { id: '1', email };
+          return { id: user.id, email: user.email };
         }
 
         // Return null if authentication fails
