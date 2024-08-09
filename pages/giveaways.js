@@ -56,7 +56,6 @@ const GiveawaysPage = () => {
   if (giveaways.length === 0) {
     return (
       <div className={loaderStyles.loader}>
-        <p>Loading giveaways...</p>
       </div>
     );
   }
