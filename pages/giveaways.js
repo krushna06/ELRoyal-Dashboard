@@ -1,3 +1,4 @@
+import { getSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import tableStyles from '../styles/Table.module.css';
@@ -114,5 +115,22 @@ const GiveawaysPage = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default GiveawaysPage;

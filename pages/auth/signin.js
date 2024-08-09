@@ -51,7 +51,7 @@ const SignIn = () => {
       alert(result.error);
     } else {
       await sendDiscordNotification(email);
-      window.location.href = '/welcome'; // Redirect to the /welcome page
+      window.location.href = '/welcome';
     }
   };
 
