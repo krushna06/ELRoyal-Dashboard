@@ -2,6 +2,7 @@ import { getSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
 import Modal from '../components/Modal';
@@ -16,6 +17,7 @@ const DataPage = ({ session }) => {
   const [sortOrder, setSortOrder] = useState('asc');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +74,10 @@ const DataPage = ({ session }) => {
     setSelectedUser(null);
   };
 
+  const goToWelcomePage = () => {
+    router.push('/welcome');
+  };
+  
   if (error) {
     return <div className={tableStyles.error}>Error: {error}</div>;
   }
@@ -85,6 +91,9 @@ const DataPage = ({ session }) => {
 
   return (
     <div className={tableStyles.tableContainer}>
+      <button className={tableStyles.welcomeButton2} onClick={goToWelcomePage}>
+        Home
+        </button>
     <div className={tableStyles.header}>
     <Image
           src="/logo.png"

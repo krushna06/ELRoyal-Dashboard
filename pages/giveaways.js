@@ -1,6 +1,7 @@
 import { getSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
 import GiveawaysModal from '../components/GiveawaysModal';
@@ -10,6 +11,7 @@ const GiveawaysPage = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGiveaway, setSelectedGiveaway] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchGiveaways = async () => {
@@ -50,6 +52,10 @@ const GiveawaysPage = () => {
     setSelectedGiveaway(null);
   };
 
+  const goToWelcomePage = () => {
+    router.push('/welcome');
+  };
+
   if (error) {
     return <div className={tableStyles.error}>{error}</div>;
   }
@@ -63,6 +69,9 @@ const GiveawaysPage = () => {
 
   return (
     <div className={tableStyles.tableContainer}>
+      <button className={tableStyles.welcomeButton} onClick={goToWelcomePage}>
+        Home
+      </button>
       <h1 className={tableStyles.pageTitle}>Active Giveaways</h1>
       <br></br>
       <div className={tableStyles.tableWrapper}>
