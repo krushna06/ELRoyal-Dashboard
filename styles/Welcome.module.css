@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  color: #ddd;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #444;
+  padding: 10px 100px;
+  display: flex;
+  justify-content: space-around;
+  margin: 20px auto 0 auto;
+  border-radius: 12px;
+}
+
+.navLink {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 8px 36px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navLink:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  margin: 0;
+  color: #ddd;
+}
