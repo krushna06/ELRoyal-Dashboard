@@ -13,7 +13,6 @@
   padding: 30px;
 }
 
-
 .modal {
   background: #444;
   color: #ddd;
@@ -49,6 +48,19 @@
 
 .content {
   margin-top: 20px;
+}
+
+.content ol {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.content li {
+  margin-bottom: 10px;
+}
+
+.content li {
+  padding-left: 10px;
 }
 
 .giveawayList {
