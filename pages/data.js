@@ -5,8 +5,9 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
-import Modal from '../components/Modal';
 import modalStyles from '../styles/Modal.module.css';
+import discordIdStyles from '../styles/Discordid.module.css';
+import Modal from '../components/Modal';
 
 const DataPage = ({ session }) => {
   const [data, setData] = useState([]);
@@ -17,6 +18,7 @@ const DataPage = ({ session }) => {
   const [sortOrder, setSortOrder] = useState('asc');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [modalUrl, setModalUrl] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -64,6 +66,11 @@ const DataPage = ({ session }) => {
     setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
   };
 
+  const openUrlModal = (id) => {
+    setModalUrl(`https://discordlookup.com/user/${id}`);
+    setIsModalOpen(true);
+  };
+
   const openModal = (user) => {
     setSelectedUser(user);
     setIsModalOpen(true);
@@ -72,12 +79,13 @@ const DataPage = ({ session }) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
+    setModalUrl(null);
   };
 
   const goToWelcomePage = () => {
     router.push('/welcome');
   };
-  
+
   if (error) {
     return <div className={tableStyles.error}>Error: {error}</div>;
   }
@@ -93,17 +101,17 @@ const DataPage = ({ session }) => {
     <div className={tableStyles.tableContainer}>
       <button className={tableStyles.welcomeButton2} onClick={goToWelcomePage}>
         Home
-        </button>
-    <div className={tableStyles.header}>
-    <Image
+      </button>
+      <div className={tableStyles.header}>
+        <Image
           src="/logo.png"
           alt="ELRoyal Logo"
           className={tableStyles.logo}
           width={100}
           height={100}
         />
-      <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
-    </div>
+        <h1 className={tableStyles.pageTitle}>ELRoyal Forms | Webview</h1>
+      </div>
       <input
         type="text"
         placeholder="Search"
@@ -135,7 +143,14 @@ const DataPage = ({ session }) => {
                 key={user.id}
                 className={index % 2 === 0 ? tableStyles.trEven : tableStyles.trHover}
               >
-                <td className={tableStyles.td}>{user.id}</td>
+                <td className={tableStyles.td}>
+                  <button 
+                    onClick={() => openUrlModal(user.id)} 
+                    className={discordIdStyles.linkButton}
+                  >
+                    {user.id}
+                  </button>
+                </td>
                 <td className={tableStyles.td}>{user.age}</td>
                 <td className={tableStyles.td}>{user.country}</td>
                 <td className={tableStyles.td}>
@@ -171,8 +186,17 @@ const DataPage = ({ session }) => {
         </table>
       </div>
 
-      <Modal show={isModalOpen} onClose={closeModal} title="User Wins">
-        {selectedUser && (
+      <Modal show={isModalOpen} onClose={closeModal} title="Discord Lookup">
+        {modalUrl && (
+          <iframe 
+            src={modalUrl} 
+            className={discordIdStyles.iframe} 
+            width="100%" 
+            height="400px"
+            frameBorder="0"
+          />
+        )}
+        {selectedUser && !modalUrl && (
           <>
             <p>ID: {selectedUser.id}</p>
             <p>Total Wins: {winsData[selectedUser.id] ? winsData[selectedUser.id].totalWins : 0}</p>
