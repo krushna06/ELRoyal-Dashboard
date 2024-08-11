@@ -72,7 +72,7 @@ const GiveawaysPage = () => {
       <button className={tableStyles.welcomeButton} onClick={goToWelcomePage}>
         Home
       </button>
-      <h1 className={tableStyles.pageTitle}>Active Giveaways</h1>
+      <h1 className={tableStyles.pageTitle}> Giveaway History </h1>
       <br></br>
       <div className={tableStyles.tableWrapper}>
         <table className={tableStyles.table}>
