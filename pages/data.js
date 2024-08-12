@@ -5,9 +5,9 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
-import modalStyles from '../styles/Modal.module.css';
+import modalStyles from '../styles/StatsModal.module.css';
 import discordIdStyles from '../styles/Discordid.module.css';
-import Modal from '../components/Modal';
+import Modal from '../components/StatsModal';
 
 const DataPage = ({ session }) => {
   const [data, setData] = useState([]);

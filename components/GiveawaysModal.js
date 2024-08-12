@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import modalStyles from '../styles/Modal.module.css';
+import modalStyles from '../styles/StatsModal.module.css';
 
 const GiveawaysModal = ({ show, onClose, giveaway }) => {
   const [isVisible, setIsVisible] = useState(show);
