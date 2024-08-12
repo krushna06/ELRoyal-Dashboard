@@ -1,3 +1,4 @@
+// pages/tournaments.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -121,13 +122,13 @@ const TournamentsPage = () => {
             </p>
             <p><strong>Winner:</strong> {selectedTournament.winner ? selectedTournament.winner : 'None'}</p>
             <h3>Registrations:</h3>
-            <ul>
+            <ol className={tableStyles.registrationList}>
               {selectedTournament.registrations.map((reg, index) => (
                 <li key={index}>
                   {reg.gamertag} (Clan: {reg.clanName})
                 </li>
               ))}
-            </ul>
+            </ol>
           </>
         )}
       </Modal>
