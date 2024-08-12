@@ -4,10 +4,13 @@ import { useRouter } from 'next/router';
 import tableStyles from '../styles/Table.module.css';
 import loaderStyles from '../styles/Loader.module.css';
 import { getSession } from 'next-auth/react';
+import Modal from '../components/StatsModal';
 
 const TournamentsPage = () => {
   const [tournaments, setTournaments] = useState([]);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTournament, setSelectedTournament] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +36,16 @@ const TournamentsPage = () => {
     });
   };
 
+  const openModal = (tournament) => {
+    setSelectedTournament(tournament);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTournament(null);
+  };
+
   const goToWelcomePage = () => {
     router.push('/welcome');
   };
@@ -54,7 +67,7 @@ const TournamentsPage = () => {
         Home
       </button>
       <h1 className={tableStyles.pageTitle}>ELRoyal | Tournaments</h1>
-      <br></br>
+      <br />
       <div className={tableStyles.tableWrapper}>
         <table className={tableStyles.table}>
           <thead>
@@ -63,6 +76,7 @@ const TournamentsPage = () => {
               <th className={tableStyles.th}>Prize</th>
               <th className={tableStyles.th}>Date</th>
               <th className={tableStyles.th}>Number of Registrants</th>
+              <th className={tableStyles.th}>Details</th>
             </tr>
           </thead>
           <tbody>
@@ -72,11 +86,51 @@ const TournamentsPage = () => {
                 <td className={tableStyles.td}>{tournament.prize}</td>
                 <td className={tableStyles.td}>{formatDate(tournament.endTime)}</td>
                 <td className={tableStyles.td}>{tournament.registrations.length}</td>
+                <td className={tableStyles.td}>
+                  <button
+                    className={tableStyles.iconButton}
+                    onClick={() => openModal(tournament)}
+                    aria-label="View Tournament Details"
+                    style={{ marginLeft: '8px' }}
+                  >
+                    <i className="fa-solid fa-circle-info"></i>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <Modal
+        show={isModalOpen}
+        onClose={closeModal}
+        title={selectedTournament ? selectedTournament.name : 'Tournament Details'}
+      >
+        {selectedTournament && (
+          <>
+            <p><strong>Game:</strong> {selectedTournament.gameName}</p>
+            <p><strong>Creator:</strong> {selectedTournament.creator}</p>
+            <p><strong>Duration:</strong> {selectedTournament.durationText}</p>
+            <p><strong>Prize:</strong> {selectedTournament.prize}</p>
+            <p><strong>Number of Games:</strong> {selectedTournament.numberOfGames}</p>
+            <p><strong>End Time:</strong> {new Date(selectedTournament.endTime).toLocaleString()}</p>
+            <p><strong>Selected Registrant:</strong> {selectedTournament.selectedRegistrant ? 
+              `${selectedTournament.selectedRegistrant.gamertag} (Clan: ${selectedTournament.selectedRegistrant.clanName})` : 
+              'None'}
+            </p>
+            <p><strong>Winner:</strong> {selectedTournament.winner ? selectedTournament.winner : 'None'}</p>
+            <h3>Registrations:</h3>
+            <ul>
+              {selectedTournament.registrations.map((reg, index) => (
+                <li key={index}>
+                  {reg.gamertag} (Clan: {reg.clanName})
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };
