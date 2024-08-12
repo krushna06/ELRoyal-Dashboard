@@ -10,6 +10,9 @@ const Navbar = () => {
       <Link href="/giveaways" className={styles.navLink}>
         Giveaways
       </Link>
+      <Link href="/tournaments" className={styles.navLink}>
+        Tournaments
+      </Link>
     </nav>
   );
 };
